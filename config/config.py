@@ -9,6 +9,8 @@ from pydantic import Field
 class Settings(BaseSettings):
     # 程序配置参数
     PORT: int = 7860
+    COLOR_LOG: bool = True
+    UPDATE_TIME: int = 3600
 
     # 端点配置参数
     BASE_URL: str = "https://api-st.siliconflow.cn/v1"

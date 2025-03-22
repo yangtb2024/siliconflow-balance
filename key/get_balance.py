@@ -19,6 +19,11 @@ def get_balance(api_key):
     for i in range(retry_count):
         try:
             response = requests.get(INFO_ENDPOINT, headers=headers, timeout=5)
+            
+            if response.status_code != 200:
+                logger.error(f"获取 {api_key} 信息失败: {response.status_code} - {response.text.strip('\"')}")
+                continue
+                
             data = response.json().get("data")
 
             return {

@@ -1,37 +1,42 @@
 """
-日志配置模块
+日志记录模块
 """
 
 import logging
 import sys
 
-def setup_logger(name, log_level=logging.INFO, log_file=None):
-    """
-    设置日志记录器。
+from config.config import Settings
 
-    Args:
-        name (str): 日志记录器的名称。
-        log_level (int): 日志级别 (logging.DEBUG, logging.INFO, etc.).
-        log_file (str): 日志文件的路径。如果为 None，则输出到控制台。
+class ColoredFormatter(logging.Formatter):
+    COLORS = {
+        logging.DEBUG: '\033[0;34m',
+        logging.INFO: '\033[0;32m',
+        logging.WARNING: '\033[0;33m',
+        logging.ERROR: '\033[0;31m',
+        logging.CRITICAL: '\033[1;41m'
+    }
+    RESET = '\033[0m'
 
-    Returns:
-        logging.Logger: 配置好的日志记录器。
-    """
-    formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+    def format(self, record):
+        log_message = super().format(record)
+        color = self.COLORS.get(record.levelno, self.RESET)
+        return f"{color}{log_message}{self.RESET}"
 
+def get_logger(name='global_logger', log_level=logging.INFO, log_file=None):
     logger = logging.getLogger(name)
+    
+    for handler in logger.handlers[:]:
+        logger.removeHandler(handler)
+    
     logger.setLevel(log_level)
-
-    if log_file:
-        file_handler = logging.FileHandler(log_file)
-        file_handler.setFormatter(formatter)
-        logger.addHandler(file_handler)
-    else:
-        stream_handler = logging.StreamHandler(sys.stdout)
-        stream_handler.setFormatter(formatter)
-        logger.addHandler(stream_handler)
-
+    
+    log_format = '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+    formatter = logging.Formatter(log_format)
+    
+    handler = logging.FileHandler(log_file) if log_file else logging.StreamHandler(sys.stdout)
+    handler.setFormatter(ColoredFormatter(log_format) if Settings().COLOR_LOG else formatter)
+    logger.addHandler(handler)
+    
     return logger
 
-# 全局日志记录器
-logger = setup_logger('global_logger')
+logger = get_logger()
