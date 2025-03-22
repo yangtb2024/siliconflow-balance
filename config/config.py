@@ -3,7 +3,8 @@
 """
 
 from typing import List
-from pydantic_settings import BaseSettings, Field
+from pydantic_settings import BaseSettings
+from pydantic import Field
 
 class Settings(BaseSettings):
     # 程序配置参数

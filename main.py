@@ -3,11 +3,14 @@
 """
 
 from flask import Flask
+from werkzeug.middleware.proxy_fix import ProxyFix
+
 from config.config import Settings
 from core.initialization import initialize_app
 
 # 创建应用实例
 app = Flask(__name__)
+app.wsgi_app = ProxyFix(app.wsgi_app, x_for=1)
 
 # 配置
 settings = Settings()
