@@ -39,7 +39,7 @@ MODEL_CONFIG = {
         "Qwen/Qwen2.5-Coder-32B-Instruct": None,
         "Qwen/QwQ-32B-Preview": None,
         "Qwen/QVQ-72B-Preview": None,
-        "AIDC-AI/Marco-o1": None,
+        "AIDC-AI/Marco-o1": ZERO_KEYS,
         "LoRA/Qwen/Qwen2.5-14B-Instruct": None,
         "LoRA/Qwen/Qwen2.5-32B-Instruct": None,
         "meta-llama/Llama-3.3-70B-Instruct": None,
