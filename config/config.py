@@ -10,7 +10,7 @@ class Settings(BaseSettings):
     PORT: int = 7860
 
     # API相关参数 
-    API_KEYS: List[str]
+    API_KEYS: List[str] = []
 
     class Config:
         env_file = ".env"
