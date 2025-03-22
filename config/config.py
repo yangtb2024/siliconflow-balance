@@ -16,5 +16,8 @@ class Settings(BaseSettings):
     # 密钥配置参数 
     API_KEYS: List[str] = Field(default_factory=list)
 
+    # 模型配置参数
+    REAL_MODEL: str = "meta-llama/Llama-3.3-70B-Instruct"
+
     class Config:
         env_file = ".env"
