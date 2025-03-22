@@ -6,6 +6,8 @@
 
 # image模型
 
+# audio模型
+
 # embedding模型
 
 # rerank模型

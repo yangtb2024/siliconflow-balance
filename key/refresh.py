@@ -18,4 +18,3 @@ def refresh_key() -> None:
 
     for KEY in NEW_API_KEYS:
         get_info(KEY)
-        

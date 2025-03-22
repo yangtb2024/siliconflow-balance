@@ -7,6 +7,7 @@ from werkzeug.middleware.proxy_fix import ProxyFix
 
 from config.config import Settings
 from core.initialization import initialize_app
+from log.logger import logger
 
 # 创建应用实例
 app = Flask(__name__)
@@ -19,5 +20,5 @@ settings = Settings()
 if __name__ == "__main__":
     initialize_app()
     port = settings.PORT
-    print(f"服务启动在端口: {port}")
+    logger.info("服务启动成功，监听端口: {}".format(port));
     app.run(host="0.0.0.0", port=port, debug=False)

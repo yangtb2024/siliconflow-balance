@@ -4,6 +4,7 @@
 
 import requests
 
+from log.logger import logger
 from core.constants import INFO_ENDPOINT
 
 # 获取密钥信息
@@ -13,7 +14,9 @@ def get_info(api_key):
         "Content-Type": "application/json"
     }
 
-    try:
-        response = requests.get(INFO_ENDPOINT, headers=headers)
-    except requests.exceptions.RequestException as e:
-        pass
+    for i in range(3):
+        try:
+            response = requests.get(INFO_ENDPOINT, headers=headers)
+            logger.info(f"成功获取 {response.text}")
+        except requests.exceptions.RequestException as e:
+            logger.error(f"第 {i + 1} / 3 次获取 {api_key} 信息失败: {e}")
