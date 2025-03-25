@@ -37,7 +37,7 @@ def get_balance(api_key):
             logger.error(f"第 {i + 1} / {retry_count} 次获取 {api_key} 信息失败: {e}")
 
     # 查询失败
-    logger.error(f"{api_key} 信息获取失败，已重试 {retry_count} 次")
+    logger.error(f"{api_key} 信息获取失败, 已重试 {retry_count} 次")
     return {
         "success": False,
         "balance": 0,

@@ -10,6 +10,7 @@ from core.refresh import refresh_app
 from log.logger import logger
 from router.api_route import setup_api_routes
 from router.route import register_routes
+from core.error_handler import register_error_handlers
 
 def initialize_app() -> FastAPI:
     if not Settings().ALLOW_KEYS:
@@ -30,5 +31,8 @@ def initialize_app() -> FastAPI:
     
     register_routes(api_app)
     logger.info("面板路由注册完成")
+    
+    register_error_handlers(api_app)
+    logger.info("错误处理器注册完成")
     
     return api_app
