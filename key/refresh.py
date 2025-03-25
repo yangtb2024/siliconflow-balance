@@ -7,6 +7,8 @@ import concurrent.futures
 from config.config import Settings
 from key.config import PAID_KEYS, FREE_REAL_KEYS, ZERO_REAL_KEYS, FREE_KEYS, ZERO_KEYS, ERROR_KEYS, KEYS_INFO
 from key.config import NEW_PAID_KEYS, NEW_FREE_REAL_KEYS, NEW_ZERO_REAL_KEYS, NEW_FREE_KEYS, NEW_ZERO_KEYS, NEW_ERROR_KEYS
+from key.config import PAID_KEYS_POINTER, FREE_REAL_KEYS_POINTER, ZERO_REAL_KEYS_POINTER
+from key.config import FREE_KEYS_POINTER, ZERO_KEYS_POINTER, ERROR_KEYS_POINTER
 from key.update import update_key
 from log.logger import logger
 
@@ -46,6 +48,17 @@ def refresh_key() -> None:
     ERROR_KEYS.clear()
     ERROR_KEYS.extend(NEW_ERROR_KEYS)
 
+    # 重置所有密钥类型的指针
+    global PAID_KEYS_POINTER, FREE_REAL_KEYS_POINTER, ZERO_REAL_KEYS_POINTER
+    global FREE_KEYS_POINTER, ZERO_KEYS_POINTER, ERROR_KEYS_POINTER
+    
+    PAID_KEYS_POINTER = 0
+    FREE_REAL_KEYS_POINTER = 0
+    ZERO_REAL_KEYS_POINTER = 0
+    FREE_KEYS_POINTER = 0
+    ZERO_KEYS_POINTER = 0
+    ERROR_KEYS_POINTER = 0
+    
     logger.info("密钥刷新完成")
 
     logger.info(f"PAID_KEYS: {len(PAID_KEYS)} keys available")
