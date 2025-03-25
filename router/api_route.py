@@ -4,7 +4,7 @@ API路由模块
 
 from fastapi import APIRouter, Depends, HTTPException, Request
 
-from model.api import get_models_list
+from model.api import get_models_list, get_chat_completions
 from config.config import Settings
 
 # 创建API路由器
@@ -30,6 +30,11 @@ def verify_authorization(request: Request):
 @router.get("/hf/v1/models")
 async def list_models(_=Depends(verify_authorization)):
     return get_models_list()
+
+@router.get("/v1/chat/completions")
+@router.get("/hf/v1/chat/completions")
+async def get_chat_completions(_=Depends(verify_authorization)):
+    return get_chat_completions()
 
 def setup_api_routes(app):
     app.include_router(router)
