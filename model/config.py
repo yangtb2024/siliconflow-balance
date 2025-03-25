@@ -8,7 +8,7 @@ MODEL_CONFIG = {
         "THUDM/chatglm3-6b": None,
         "THUDM/glm-4-9b-chat": None,
         "Qwen/Qwen2-7B-Instruct": None,
-        "Qwen/Qwen2-1.5B-Instruct": None,
+        "Qwen/Qwen2-1.5B-Instruct": "ZERO_KEYS",
         "Pro/THUDM/glm-4-9b-chat": None,
         "Pro/Qwen/Qwen2-7B-Instruct": None,
         "Pro/Qwen/Qwen2-1.5B-Instruct": None,

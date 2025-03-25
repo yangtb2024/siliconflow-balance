@@ -25,6 +25,25 @@ def chat_core(api_key, request_data):
         if is_stream:
             request_data["stream"] = True
             
+            response = requests.post(CHAT_ENDPOINT, headers=headers, json=request_data, stream=True)
+            
+            if response.status_code != 200:
+                error_msg = f"聊天请求失败: HTTP {response.status_code}"
+                try:
+                    error_data = response.json()
+                    if "error" in error_data and isinstance(error_data["error"], dict):
+                        error_msg = error_data["error"].get("message", error_msg)
+                    elif "message" in error_data:
+                        error_msg = error_data["message"]
+                    if "code" in error_data:
+                        error_msg = f"错误 {error_data['code']}: {error_msg}"
+                except:
+                    pass
+                
+                logger.error(f"流式聊天请求失败: {error_msg}")
+                response.close()
+                raise HTTPException(status_code=response.status_code, detail=error_msg)
+            
             def generate():
                 first_chunk_received = False
                 first_chunk_time_diff = 0
@@ -32,40 +51,27 @@ def chat_core(api_key, request_data):
                 output_tokens = 0
                 
                 try:
-                    with requests.post(CHAT_ENDPOINT, headers=headers, json=request_data, stream=True) as response:
-                        if response.status_code != 200:
-                            error_msg = f"聊天请求失败: HTTP {response.status_code}"
+                        
+                    for line in response.iter_lines():
+                        if line:
+                            if not first_chunk_received:
+                                first_chunk_time = time.time()
+                                first_chunk_time_diff = first_chunk_time - start_time
+                                first_chunk_received = True
+                            
+                            line_data = line.decode('utf-8')
+                            
                             try:
-                                error_data = response.json()
-                                if "error" in error_data:
-                                    error_msg = error_data["error"].get("message", error_msg)
+                                if line_data.startswith("data: "):
+                                    data_json = json.loads(line_data[6:])
+                                    if "usage" in data_json:
+                                        usage = data_json["usage"]
+                                        input_tokens = usage.get("prompt_tokens", input_tokens)
+                                        output_tokens = usage.get("completion_tokens", output_tokens)
                             except:
                                 pass
                             
-                            yield f"data: {json.dumps({'error': error_msg}, ensure_ascii=False)}\n\n"
-                            yield "data: [DONE]\n\n"
-                            return
-                        
-                        for line in response.iter_lines():
-                            if line:
-                                if not first_chunk_received:
-                                    first_chunk_time = time.time()
-                                    first_chunk_time_diff = first_chunk_time - start_time
-                                    first_chunk_received = True
-                                
-                                line_data = line.decode('utf-8')
-                                
-                                try:
-                                    if line_data.startswith("data: "):
-                                        data_json = json.loads(line_data[6:])
-                                        if "usage" in data_json:
-                                            usage = data_json["usage"]
-                                            input_tokens = usage.get("prompt_tokens", input_tokens)
-                                            output_tokens = usage.get("completion_tokens", output_tokens)
-                                except:
-                                    pass
-                                
-                                yield f"{line_data}\n\n"
+                            yield f"{line_data}\n\n"
                 
                 finally:
                     end_time = time.time()
@@ -83,10 +89,15 @@ def chat_core(api_key, request_data):
             if response.status_code != 200:
                 try:
                     error_data = response.json()
-                    if "error" in error_data:
+                    if "error" in error_data and isinstance(error_data["error"], dict):
                         error_msg = error_data["error"].get("message", f"请求失败: HTTP {response.status_code}")
+                    elif "message" in error_data:
+                        error_msg = error_data["message"]
                     else:
                         error_msg = f"请求失败: HTTP {response.status_code}"
+                    
+                    if "code" in error_data:
+                        error_msg = f"错误 {error_data['code']}: {error_msg}"
                 except:
                     error_msg = f"请求失败: HTTP {response.status_code}"
                 

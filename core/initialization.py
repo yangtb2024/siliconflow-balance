@@ -11,6 +11,7 @@ from log.logger import logger
 from router.api_route import setup_api_routes
 from router.route import register_routes
 from core.error_handler import register_error_handlers
+from core.middleware import RealIPMiddleware
 
 def initialize_app() -> FastAPI:
     if not Settings().ALLOW_KEYS:
@@ -34,5 +35,8 @@ def initialize_app() -> FastAPI:
     
     register_error_handlers(api_app)
     logger.info("错误处理器注册完成")
+    
+    api_app.add_middleware(RealIPMiddleware)
+    logger.info("真实IP中间件注册完成")
     
     return api_app
