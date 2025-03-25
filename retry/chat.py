@@ -2,10 +2,13 @@
 重试 chat 模块
 """
 
+import json
 from fastapi import HTTPException
 
 from model.config import MODEL_LIST
 from key.balance import get_key
+from chat.core import chat_core
+from log.logger import logger
 
 def get_chat(request_data):
     if not request_data.get("model"):
@@ -21,24 +24,10 @@ def get_chat(request_data):
 
     key = get_key(model_key)
 
-    return {
-        "id": "chatcmpl-123",
-        "object": "chat.completion",
-        "created": 1677858242,
-        "model": request_data.get("model", ""),
-        "usage": {
-            "prompt_tokens": 13,
-            "completion_tokens": 7,
-            "total_tokens": 20
-        },
-        "choices": [
-            {
-                "message": {
-                    "role": "assistant",
-                    "content": "这是模型的响应"
-                },
-                "finish_reason": "stop",
-                "index": 0
-            }
-        ]
-    }
+    if model_type == "chat":
+        formatted_json = json.dumps(request_data, indent=4, ensure_ascii=False)
+        logger.info(f"收到请求, 使用密钥 {key} 处理: {formatted_json}")
+
+        return chat_core(key, request_data)
+    
+    raise HTTPException(status_code=400, detail="暂不支持该类型")

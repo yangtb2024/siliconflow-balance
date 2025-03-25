@@ -38,8 +38,6 @@ async def api_get_model(_=Depends(verify_authorization)):
 async def api_get_chat(request: Request, _=Depends(verify_authorization)):
     try:
         json_data = await request.json()
-        formatted_json = json.dumps(json_data, indent=4, ensure_ascii=False)
-        logger.info(f"收到请求: \n{formatted_json}")
         return retry_get_chat(json_data)
     except json.JSONDecodeError:
         raise HTTPException(status_code=400, detail="无效的 json 请求体")
