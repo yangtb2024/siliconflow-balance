@@ -5,7 +5,7 @@
 import concurrent.futures
 
 from config.config import Settings
-from key.config import PAID_KEYS, FREE_REAL_KEYS, ZERO_REAL_KEYS, FREE_KEYS, ZERO_KEYS, ERROR_KEYS
+from key.config import PAID_KEYS, FREE_REAL_KEYS, ZERO_REAL_KEYS, FREE_KEYS, ZERO_KEYS, ERROR_KEYS, KEYS_INFO
 from key.config import NEW_PAID_KEYS, NEW_FREE_REAL_KEYS, NEW_ZERO_REAL_KEYS, NEW_FREE_KEYS, NEW_ZERO_KEYS, NEW_ERROR_KEYS
 from key.update import update_key
 from log.logger import logger
@@ -22,6 +22,7 @@ def refresh_key() -> None:
     NEW_FREE_KEYS.clear()
     NEW_ZERO_KEYS.clear()
     NEW_ERROR_KEYS.clear()
+    KEYS_INFO.clear()
 
     # 多线程并发处理
     with concurrent.futures.ThreadPoolExecutor(max_workers=500) as executor:

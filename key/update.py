@@ -5,7 +5,7 @@
 from log.logger import logger
 from key.get_balance import get_balance
 from key.get_real import get_real
-from key.config import NEW_PAID_KEYS, NEW_FREE_REAL_KEYS, NEW_ZERO_REAL_KEYS, NEW_FREE_KEYS, NEW_ZERO_KEYS, NEW_ERROR_KEYS
+from key.config import KEYS_INFO, NEW_PAID_KEYS, NEW_FREE_REAL_KEYS, NEW_ZERO_REAL_KEYS, NEW_FREE_KEYS, NEW_ZERO_KEYS, NEW_ERROR_KEYS
 
 def update_key(api_key: str) -> None:
     balance_info = get_balance(api_key)
@@ -32,5 +32,7 @@ def update_key(api_key: str) -> None:
     
     if total_balance > 0:
         NEW_FREE_KEYS.append(api_key)
+
+    KEYS_INFO.append([api_key, balance, charge_balance, total_balance, is_real])
         
     logger.info(f"密钥 {api_key} 信息更新成功, 赠送余额: {balance}, 充值余额: {charge_balance}, 总余额: {total_balance}, 实名状态: {is_real}")

@@ -25,3 +25,6 @@ NEW_ZERO_KEYS = []
 # 无效
 ERROR_KEYS = []
 NEW_ERROR_KEYS = []
+
+# 密钥信息
+KEYS_INFO = []

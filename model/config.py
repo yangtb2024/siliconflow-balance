@@ -2,8 +2,7 @@
 模型定义模块
 """
 
-from key.config import PAID_KEYS, FREE_REAL_KEYS, ZERO_REAL_KEYS, FREE_KEYS, ZERO_KEYS
-
+# 模型配置
 MODEL_CONFIG = {
     "chat": {
         "THUDM/chatglm3-6b": None,
@@ -39,7 +38,7 @@ MODEL_CONFIG = {
         "Qwen/Qwen2.5-Coder-32B-Instruct": None,
         "Qwen/QwQ-32B-Preview": None,
         "Qwen/QVQ-72B-Preview": None,
-        "AIDC-AI/Marco-o1": ZERO_KEYS,
+        "AIDC-AI/Marco-o1": "ZERO_KEYS",
         "LoRA/Qwen/Qwen2.5-14B-Instruct": None,
         "LoRA/Qwen/Qwen2.5-32B-Instruct": None,
         "meta-llama/Llama-3.3-70B-Instruct": None,
@@ -109,3 +108,6 @@ MODEL_CONFIG = {
         "Wan-AI/Wan2.1-I2V-14B-720P-Turbo": None
     }
 }
+
+MODEL_LIST = []
+NEW_MODEL_LIST = []
