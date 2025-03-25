@@ -1,33 +1,13 @@
 """
-模型API接口模块
+重试 chat 模块
 """
 
 from fastapi import HTTPException
 
 from model.config import MODEL_LIST
-from log.logger import logger
 from key.balance import get_key
 
-def get_models_list():
-    models_list = []
-    
-    for model_entry in MODEL_LIST:
-        model_id = model_entry[0]
-        
-        model_info = {
-            "id": model_id,
-            "object": "model",
-            "created": 0,
-            "owned_by": ""
-        }
-        models_list.append(model_info)
-    
-    return {
-        "object": "list",
-        "data": models_list
-    }
-
-def get_chat_completions(request_data):
+def get_chat(request_data):
     if not request_data.get("model"):
         raise HTTPException(status_code=400, detail="模型不能为空")
     

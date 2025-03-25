@@ -12,6 +12,7 @@ class Settings(BaseSettings):
     COLOR_LOG: bool = True
     UPDATE_TIME: int = 3600
     ALLOW_KEYS: List[str] = Field(default_factory=list)
+    RETRY_COUNT: int = 3
 
     # 端点配置参数
     BASE_URL: str = "https://api-st.siliconflow.cn/v1"

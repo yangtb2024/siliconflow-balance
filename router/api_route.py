@@ -5,7 +5,7 @@ API路由模块
 import json
 from fastapi import APIRouter, Depends, HTTPException, Request
 
-from model.api import get_models_list, get_chat_completions
+from retry.retry import retry_get_chat, retry_get_model
 from config.config import Settings
 from log.logger import logger
 
@@ -30,17 +30,17 @@ def verify_authorization(request: Request):
 
 @router.get("/v1/models")
 @router.get("/hf/v1/models")
-async def list_models(_=Depends(verify_authorization)):
-    return get_models_list()
+async def api_get_model(_=Depends(verify_authorization)):
+    return retry_get_model()
 
 @router.post("/v1/chat/completions")
 @router.post("/hf/v1/chat/completions")
-async def chat_completions(request: Request, _=Depends(verify_authorization)):
+async def api_get_chat(request: Request, _=Depends(verify_authorization)):
     try:
         json_data = await request.json()
         formatted_json = json.dumps(json_data, indent=4, ensure_ascii=False)
         logger.info(f"收到请求: \n{formatted_json}")
-        return get_chat_completions(json_data)
+        return retry_get_chat(json_data)
     except json.JSONDecodeError:
         raise HTTPException(status_code=400, detail="无效的 json 请求体")
 
